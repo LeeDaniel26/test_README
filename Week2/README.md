@@ -18,8 +18,8 @@ bool
 
 string
 - 객체지향 언어인 C#의 문자열은 클래스이며 이 String 클래스는 Char 객체의 연속으로 이루어져 있다. 문자열은 null-terminating char로 끝나지 않는다.
-	C#과 달리 C의 문자열은 Unicode char 값의 연속으로 배열로 이루어져 있다.
-    문자열은 null-terminating char로 끝난다.
+	C#과 달리 C의 문자열은 Unicode char 값의 연속으로 배열로 이루어져 있다.\
+	문자열은 null-terminating char로 끝난다.
     
 배열(Array)
 - C#에서의 배열 선언: int[] arrayName = new int[5];
