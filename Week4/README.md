@@ -197,3 +197,21 @@ Quaternion rotation = a * b;
 ```
 
 (중요) a 상태에서 b만틈 더 회전한 회전값은 a + b가 아닌 a * b이다.
+
+##  10장 공간과 움직임
+### **Local and Global Space**
+
+전역 공간(Global 또는 World Space)은 게임 월드의 X, Y, Z 방향을 오브젝트의 좌표 기준으로 사용한다.
+
+오브젝트 공간(Object Space)는 오브젝트 자신의 X, Y, Z 방향을 자신의 좌표 기준으로 사용한다.
+
+지역 공간(Local Space)는 부모 게임 오브젝트의 X, Y, Z 방향을 자식 게임 오브젝트의 좌표 기준으로 사용한다.
+
+Local Space이면 Object Space가 활성화 되는데, 사실상 Local Space는 Object Space이며 부모-자식 관계를 나타내는 Local Space는 Global/Object Space에 공종한다고 볼 수 있다.
+Global Space에서도 Local Space(부모-자식 관계)는 존재한다. Global Space에서 부모-자식 관계의 부모 게임 오브젝트를 움직이면 자식 게임 오브젝트의 좌표는 부모를 기준으로 한다. 이는 Object Space에서도 마찬가지이다. 하지만, 달라지는 점은 자식 게임 오브젝트의 방향이다. Global Space에서는 게임 월드의 방향을 기준으로 하며, Local Space(Object Space)에서는 자신의 방향을 기준으로 한다.
+
+**Pivot/Center**
+
+Pivot은 오브젝트의 기준점이 오브젝트의 실제 기준점이며, Center는 ‘눈으로 보이는 오브젝트의 중점’이다.
+
+일반적으로 사람 형태의 3D 모델은 발바닥 근처를 기준점으로 하며, Pivot 모드로 씬 창에서 보면 사람 모델의 발바닥 근처에 기준점이 있다. Center 모드로 보면 실제 기준점을 무시하고 사람 모델의 가슴 근처에 기준점이 있다.
