@@ -111,3 +111,89 @@ float c = Vector3.Dot(a, b); // 수직인 벡터끼리 내적하면 결과는 0
 이러한 벡터 C를 “Normal Vector 또는 법선벡터”라 부른다.
 
 벡터의 외적:
+
+```csharp
+Vector3 a = new Vector3(0, 0, 1); // 앞쪽(Z) 방향벡터
+Vector3 b = new Vector3(1, 0, 0); // 오른쪽(X) 방향벡터
+
+Vector3 c = Vector3.Cross(a, b); // c는 a,b와 수족인 위쪽(Y) 방향벡터
+```
+### 유니티 Vector 타입
+
+Vector 타입은 유니티 라이브러리에 클래스가 아닌 구조체(struct)로 선언되어 있다.
+
+```csharp
+public struct Vector3
+{
+	public float x;
+	public float y;
+	public float z;
+	...
+}
+```
+
+(중요) 클래스 타입 변수는 참조 타입인 반면, 구조체 타입 변수는 값 타입이다.
+
+```csharp
+Vector3 a = new Vector3(0, 0, 0);
+Vector3 b = a;
+b.x = 100;
+```
+
+ 위 코드에서 Vector3가 클래스이자 참조 타입이면 a와 b값은 다음과 괕다.
+
+```csharp
+a : (100, 0, 0)
+b : (100, 0, 0)
+```
+
+반면, Vector3가 구조체이자 값 타입이면 a와 b값은 다음과 같다.
+
+```csharp
+a : (0, 0, 0)
+b : (100, 0, 0)
+```
+## Quaternion
+
+쿼터니언을 이해하려면 먼저 오일러각(Euler Angle)의 이해가 필요하다.
+
+### 오일러각(Euler Angle)
+
+3D 벡터(Vector3)로 3D 회전을 나타내는 표현으로, 회전 전 상태에서 회전한 다음 상태가 될 때 z-x-y 순으로 세 번에 결쳐 회전하여 세 각도로 물체의 회전을 표현하는 방식이다.
+
+**짐벌락(Gimbal Lock)**
+
+짐벌락은 오일러각에서 흔히 발생하는 문제로 x, y, z축이 z-x-y 순으로 회전하면서 한 축이 다른 축과 겹치면서 한 축이 제 기능을 상실하는 것을 말한다.
+
+오일러각의 한 축을 기준으로 하는 회전은 다른 축에 영향을 주는데, 그 이유는 축들이 계층 구조를 이루고 있기 때문이다. 계층 구조는 총 6가지(zxy, zyx, yxz, yzx, xyz, xzy)가 있다. 계층의 맨 위 축의 회전은 다른 두 축을, 중간 축의 회전은 아래 축에 영향을 주며, 맨 아래 축의 회전은 다른 두 축에 영향을 주지 않는다.
+
+예를 들어, 계층 구조가 zxy(맨 위 축이 y, 중간 축이 x, 맨 아래 축이 z)인 오일러각에서 짐블락이 발생하는 경우는 다움과 같다.
+x축을 기준으로 90도 회전하면 맨 아래 축인 z축도 함께 90도 회전하게 된다. (z축을 기준으로 회전하는 것이 아닌 x축을 기준으로 z축이 90도 회전한다.) 이렇게 되면 z축이 y축과 겹치게 되는데, z축을 기준으로 회전하는 것과 y축을 기준으로 회전하는 것 사이에 차이가 없어진다. 즉, z축이 제 기능을 상실하게 된다.
+
+### Quaternion
+
+쿼터니언은 운소로 x, y, z, w를 가지는 값으로, 사원수라고 부르기도 한다.
+
+세 번에 걸쳐 회전하는 오일러각과 달리 쿼터니언은 ‘한 번에 회전하는’ 방식이기 때문에 짐불락을 피할 수 있다. 따라서, 게임에서 회전을 구현할 때는 쿼터니언을 사용한다.
+
+하지만, Unity에서 Transform 컴포넌트를 보면 Rotation을 쿼터니언이 아닌 Vector3 타입인 오일러각을 사용한다. 그 이유는, 쿼터니언은 복잡한 계산법을 기반으로 하기 때문에 내부에서는 쿼터니언을 사용하지만 인스펙터 창에서는 쉽게 사용할 수 있도록 오일러각으로 변형하여 표현한다.
+
+Quaternion을 사용한 예제:
+
+```csharp
+// Vectir3 타입인 오일러각을 사용하여 Quaternion 값을 생성
+Quaternion rotation = Quaternion.Euler(new Vector3(0, 60, 0));
+
+// Vector3 타입의 오일러 값으로 변형
+Vector3 eulerRotation = rotation.eulerAngles;
+```
+
+```csharp
+Quaternion a = Quaternion.Euler(30, 0, 0);
+Quaternion b = Quaternion.Euler(0, 60, 0);
+
+// a만큼 회전한 상태에서 b만큼 더 회전한 회전값
+Quaternion rotation = a * b;
+```
+
+(중요) a 상태에서 b만틈 더 회전한 회전값은 a + b가 아닌 a * b이다.
