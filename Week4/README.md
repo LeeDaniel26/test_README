@@ -24,9 +24,9 @@
 
 벡터 정규화:
 
-	```csharp
+```csharp
 	Vector3 a = new Vector3(3, 3, 3);
 	Vector3 b = a.normalized; // b : (0.6, 0.6, 0,6)
 
 	float mag = b.magnitude;  // mag : 대략 5.19...
-	```
+```
